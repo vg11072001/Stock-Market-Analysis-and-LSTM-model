@@ -1,0 +1,717 @@
+Stock Analysis of companies[.tocSkip]####
+
+
+
+== Here, we look at data from the stock market, particularly some technology stocks. We will learn how to use pandas to get stock information, visualize different aspects of it, and finally we will look at a few ways of analyzing the risk of a stock, based on its previous performance history.
+
+Table of Contents[.tocSkip]####
+
+[.toc-item-num]##1  ##What was the change in price of the stock
+overtime?
+
+[.toc-item-num]##2  ##What was the moving average of the various stocks?
+
+[.toc-item-num]##3  ##What was the daily return of the stock on average?
+
+[.toc-item-num]##4  ##What was the correlation between different stocks
+closing prices?
+
+[.toc-item-num]##5  ##How much value do we put at risk by investing in a
+particular stock?
+
+== What was the change in price of the stock overtime?
+
+== In this section, handle requesting stock information with pandas, and to analyze basic attributes of a stock.
+
+
++*In[1]:*+
+[source, ipython3]
+----
+import pandas as pd
+import numpy as np
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
+import yfinance as yf
+
+sns.set_style('whitegrid')
+plt.style.use('fivethirtyeight')
+%matplotlib inline
+
+#for time stamps
+from datetime import datetime
+tech_list = ['AAPL', 'GOOG', 'MSFT', 'AMZN']
+----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+# Set the start and end date
+start_date = '2020-10-28'
+end_date = '2021-10-28'
+
+ticker = 'AAPL'
+appl = yf.download(ticker, start_date, end_date)
+
+ticker = 'GOOG'
+goog = yf.download(ticker, start_date, end_date)
+
+ticker = 'MSFT'
+msft = yf.download(ticker, start_date, end_date)
+
+ticker = 'AMZN'
+amzn = yf.download(ticker, start_date, end_date)
+
+company_list = [appl, goog, msft, amzn]
+company_name = ["APPLE", "GOOGLE", "MICROSOFT", "AMAZON"]
+
+for company, com_name in zip(company_list, company_name):
+    company["company_name"] = com_name
+    
+df = pd.concat(company_list, axis=0)
+df.head(10)
+----
+
+
++*Out[2]:*+
+----
+[*********************100%***********************]  1 of 1 completed
+[*********************100%***********************]  1 of 1 completed
+[*********************100%***********************]  1 of 1 completed
+[*********************100%***********************]  1 of 1 completed
+
+[cols=",,,,,,,",options="header",]
+|===
+| |Open |High |Low |Close |Adj Close |Volume |company_name
+|Date | | | | | | |
+
+|2020-10-27 |115.489998 |117.279999 |114.540001 |116.599998 |115.854843
+|92276800 |APPLE
+
+|2020-10-28 |115.050003 |115.430000 |111.099998 |111.199997 |110.489357
+|143937800 |APPLE
+
+|2020-10-29 |112.370003 |116.930000 |112.199997 |115.320000 |114.583015
+|146129200 |APPLE
+
+|2020-10-30 |111.059998 |111.989998 |107.720001 |108.860001 |108.164307
+|190272600 |APPLE
+
+|2020-11-02 |109.110001 |110.680000 |107.320000 |108.769997 |108.074883
+|122866900 |APPLE
+
+|2020-11-03 |109.660004 |111.489998 |108.730003 |110.440002 |109.734207
+|107624400 |APPLE
+
+|2020-11-04 |114.139999 |115.589996 |112.349998 |114.949997 |114.215385
+|138235500 |APPLE
+
+|2020-11-05 |117.949997 |119.620003 |116.870003 |119.029999 |118.269310
+|126387100 |APPLE
+
+|2020-11-06 |118.320000 |119.199997 |116.129997 |118.690002 |118.134956
+|114457900 |APPLE
+
+|2020-11-09 |120.500000 |121.989998 |116.050003 |116.320000 |115.776031
+|154515300 |APPLE
+|===
+----
+
+
++*In[3]:*+
+[source, ipython3]
+----
+appl = pd.read_csv (r'AAPL.csv')
+appl = appl.set_index('Date')
+
+goog = pd.read_csv (r'GOOG.csv')
+goog = goog.set_index('Date')
+
+msft = pd.read_csv (r'MSFT.csv')
+msft = msft.set_index('Date')
+amzn = pd.read_csv (r'AMZN.csv')
+amzn = amzn.set_index('Date')
+
+company_list = [appl, goog, msft, amzn]
+company_name = ["APPLE", "GOOGLE", "MICROSOFT", "AMAZON"]
+
+for company, com_name in zip(company_list, company_name):
+    company["company_name"] = com_name
+    
+df = pd.concat(company_list, axis=0)
+df.tail(10)
+----
+
+
++*Out[3]:*+
+----
+[cols=",,,,,,,",options="header",]
+|===
+| |Open |High |Low |Close |Adj Close |Volume |company_name
+|Date | | | | | | |
+
+|2021-10-18 |3388.360107 |3449.169922 |3385.100098 |3446.739990
+|3446.739990 |3174100 |AMAZON
+
+|2021-10-19 |3434.290039 |3454.689941 |3422.000000 |3444.149902
+|3444.149902 |2386100 |AMAZON
+
+|2021-10-20 |3452.659912 |3462.860107 |3400.370117 |3415.060059
+|3415.060059 |2139800 |AMAZON
+
+|2021-10-21 |3414.250000 |3440.280029 |3403.000000 |3435.010010
+|3435.010010 |1881400 |AMAZON
+
+|2021-10-22 |3421.000000 |3429.840088 |3331.300049 |3335.550049
+|3335.550049 |3133800 |AMAZON
+
+|2021-10-25 |3335.000000 |3347.800049 |3297.699951 |3320.370117
+|3320.370117 |2226000 |AMAZON
+
+|2021-10-26 |3349.510010 |3416.120117 |3343.979980 |3376.070068
+|3376.070068 |2698300 |AMAZON
+
+|2021-10-27 |3388.000000 |3437.000000 |3371.449951 |3392.489990
+|3392.489990 |2702200 |AMAZON
+
+|2021-10-28 |3402.100098 |3479.000000 |3386.000000 |3446.570068
+|3446.570068 |5648200 |AMAZON
+
+|2021-10-29 |3300.020020 |3355.929932 |3273.320068 |3347.413086
+|3347.413086 |4240214 |AMAZON
+|===
+----
+
+
++*In[4]:*+
+[source, ipython3]
+----
+appl.describe()
+----
+
+
++*Out[4]:*+
+----
+[cols=",,,,,,",options="header",]
+|===
+| |Open |High |Low |Close |Adj Close |Volume
+|count |254.000000 |254.000000 |254.000000 |254.000000 |254.000000
+|2.540000e+02
+
+|mean |133.593879 |134.956890 |132.208042 |133.634901 |133.321158
+|9.268483e+07
+
+|std |11.004483 |10.956871 |11.066220 |11.062650 |11.222890
+|2.957725e+07
+
+|min |109.110001 |110.680000 |107.320000 |108.769997 |108.074883
+|4.639770e+07
+
+|25% |124.605002 |126.160004 |123.209997 |125.074999 |124.805508
+|7.232048e+07
+
+|50% |132.394997 |133.980003 |131.085007 |132.175003 |131.839202
+|8.744580e+07
+
+|75% |143.765003 |145.042496 |142.705002 |144.552505 |144.336254
+|1.077262e+08
+
+|max |156.979996 |157.259995 |154.389999 |156.690002 |156.690002
+|1.925415e+08
+|===
+----
+
+
++*In[5]:*+
+[source, ipython3]
+----
+appl.info()
+----
+
+
++*Out[5]:*+
+----
+<class 'pandas.core.frame.DataFrame'>
+Index: 254 entries, 2020-10-28 to 2021-10-29
+Data columns (total 7 columns):
+ #   Column        Non-Null Count  Dtype  
+---  ------        --------------  -----  
+ 0   Open          254 non-null    float64
+ 1   High          254 non-null    float64
+ 2   Low           254 non-null    float64
+ 3   Close         254 non-null    float64
+ 4   Adj Close     254 non-null    float64
+ 5   Volume        254 non-null    int64  
+ 6   company_name  254 non-null    object 
+dtypes: float64(5), int64(1), object(1)
+memory usage: 15.9+ KB
+----
+
+
++*In[6]:*+
+[source, ipython3]
+----
+# Let's see a historical view of the closing price
+
+plt.figure(figsize=(15,6))
+plt.subplots_adjust(top =1.25, bottom =1.2)
+
+for i, company in enumerate(company_list,1):
+    plt.subplot(2, 2, i)
+    company['Adj Close'].plot()
+    plt.ylabel('Adj Close')
+    plt.xlabel('Date')
+    plt.title(f"Closing Price of {tech_list[i - 1]}")
+    
+plt.tight_layout()
+----
+
+
++*Out[6]:*+
+----
+![png](output_11_0.png)
+----
+
+
++*In[7]:*+
+[source, ipython3]
+----
+# Now let's plot the total volume of stock being traded each day
+
+plt.figure(figsize = (15,7))
+plt.subplots_adjust(top =1.25, bottom =1.2)
+
+for i, company in enumerate(company_list,1):
+    plt.subplot(2,2,i)
+    company['Volume'].plot()
+    plt.ylabel("Volume")
+    plt.xlabel ("date")
+    plt.title(f"Sales Volume for {tech_list[i-1]}")
+    
+plt.tight_layout()
+----
+
+
++*Out[7]:*+
+----
+![png](output_12_0.png)
+----
+
+== Visualizations for the closing price and the volume traded each day.
+
+== What was the moving average of the various stocks?
+
+
++*In[8]:*+
+[source, ipython3]
+----
+ma_day =[10, 20, 50]
+
+for ma in ma_day:
+    for company in company_list:
+        column_name = f"MA for {ma} days"
+        company[column_name] = company['Adj Close'].rolling(ma).mean()
+----
+
+
++*In[9]:*+
+[source, ipython3]
+----
+print(goog.tail(10))
+----
+
+
++*Out[9]:*+
+----
+                   Open         High          Low        Close    Adj Close  \
+Date                                                                          
+2021-10-18  2824.270020  2859.975098  2824.270020  2859.209961  2859.209961   
+2021-10-19  2865.830078  2882.139893  2861.919922  2876.439941  2876.439941   
+2021-10-20  2884.449951  2884.955078  2838.239990  2848.300049  2848.300049   
+2021-10-21  2843.840088  2856.989990  2832.739990  2855.610107  2855.610107   
+2021-10-22  2807.020020  2831.169922  2743.409912  2772.500000  2772.500000   
+2021-10-25  2776.209961  2784.115967  2734.969971  2775.459961  2775.459961   
+2021-10-26  2812.120117  2816.790039  2780.110107  2793.439941  2793.439941   
+2021-10-27  2798.050049  2982.360107  2798.050049  2928.550049  2928.550049   
+2021-10-28  2945.979980  2948.489990  2895.270020  2922.580078  2922.580078   
+2021-10-29  2910.399902  2967.310059  2903.330078  2956.300049  2956.300049   
+
+             Volume company_name  MA for 10 days  MA for 20 days  \
+Date                                                               
+2021-10-18   828200       GOOGLE     2784.561011     2773.023999   
+2021-10-19   765800       GOOGLE     2799.851001     2777.199500   
+2021-10-20   897000       GOOGLE     2809.972998     2778.676001   
+2021-10-21   742500       GOOGLE     2817.163013     2779.630005   
+2021-10-22  1507600       GOOGLE     2814.301001     2775.622009   
+2021-10-25  1054100       GOOGLE     2814.152002     2772.894006   
+2021-10-26  1412900       GOOGLE     2820.069995     2776.382007   
+2021-10-27  2592500       GOOGLE     2837.125000     2788.288513   
+2021-10-28  1619900       GOOGLE     2846.559009     2801.152014   
+2021-10-29   737968       GOOGLE     2858.839014     2812.504517   
+
+            MA for 50 days  
+Date                        
+2021-10-18     2809.920601  
+2021-10-19     2812.248599  
+2021-10-20     2813.976001  
+2021-10-21     2816.012402  
+2021-10-22     2816.106602  
+2021-10-25     2816.253399  
+2021-10-26     2816.555796  
+2021-10-27     2820.206597  
+2021-10-28     2824.030200  
+2021-10-29     2828.390801  
+----
+
+== Ploting all the additional Moving Averages
+
+
++*In[10]:*+
+[source, ipython3]
+----
+df.groupby("company_name").hist(figsize=(12, 12));
+----
+
+
++*Out[10]:*+
+----
+![png](output_18_0.png)
+
+![png](output_18_1.png)
+
+![png](output_18_2.png)
+
+![png](output_18_3.png)
+----
+
+
++*In[11]:*+
+[source, ipython3]
+----
+fig, axes = plt.subplots(nrows=2, ncols =2)
+fig.set_figheight(8)
+fig.set_figwidth(15)
+
+appl[['Adj Close', 'MA for 10 days', 'MA for 20 days','MA for 50 days']].plot(ax=axes[0,0])
+axes[0,0].set_title('APPLE')
+
+goog[['Adj Close', 'MA for 10 days', 'MA for 20 days','MA for 50 days']].plot(ax=axes[0,1])
+axes[0,1].set_title('GOOGLE')
+
+msft[['Adj Close', 'MA for 10 days', 'MA for 20 days','MA for 50 days']].plot(ax=axes[1,0])
+axes[1,0].set_title('MICROSOFT')
+
+amzn[['Adj Close', 'MA for 10 days', 'MA for 20 days','MA for 50 days']].plot(ax=axes[1,1])
+axes[1,1].set_title('AMAZON')
+
+fig.tight_layout()
+----
+
+
++*Out[11]:*+
+----
+![png](output_19_0.png)
+----
+
+== What was the daily return of the stock on average?
+
+== we’ve done some baseline analysis, let’s go ahead and dive a little deeper. We’re now going to analyze the risk of the stock. In order to do so we’ll need to take a closer look at the daily changes of the stock, and not just its absolute value. Let’s go ahead and use pandas to retrieve the daily returns for the Apple stock.
+
+
++*In[12]:*+
+[source, ipython3]
+----
+# we'll use pct_change to find the percent change for each day
+for company in company_list:
+    company['Daily Return'] = company['Adj Close'].pct_change()
+    
+#Then we'll plot the daily return percentage
+fig, axes = plt.subplots(nrows =2, ncols =2)
+fig.set_figheight(8)
+fig.set_figwidth(15)
+
+appl['Daily Return'].plot(ax=axes[0,0], legend = True, linestyle ='--', marker='o')
+axes[0,0].set_title('APPLE')
+
+goog['Daily Return'].plot(ax=axes[0,1], legend = True, linestyle ='--', marker ='o')
+axes[0,1].set_title('GOOGLE')
+
+msft['Daily Return'].plot(ax=axes[1,0], legend = True, linestyle ='--', marker ='o')
+axes[1,0].set_title('MICROSOFT')
+
+amzn['Daily Return'].plot(ax=axes[1,1], legend = True, linestyle ='--', marker ='o')
+axes[1,1].set_title('AMAZON')
+
+fig.tight_layout()
+----
+
+
++*Out[12]:*+
+----
+![png](output_22_0.png)
+----
+
+== Below is an overall look at the average daily return using a histogram. We’ll use seaborn to create both a histogram and kde plot on the same figure.
+
+
++*In[13]:*+
+[source, ipython3]
+----
+#Note the use of dropna() here, otherwise the NaN vaues can't be read by seaborn
+
+plt.figure(figsize=(12,7))
+
+for i, company in enumerate(company_list,1):
+    plt.subplot(2,2,i)
+    sns.distplot(company['Daily Return'].dropna(), bins=100, color='purple')
+    plt.ylabel('Daily Return')
+    plt.title(f'{company_name[i-1]}')
+    
+#Could have also done:
+# appl['Daily Return'].hist()   
+
+plt.tight_layout()
+----
+
+
++*Out[13]:*+
+----
+![png](output_24_0.png)
+----
+
+== What was the correlation between different stocks closing prices?
+
+== Building a DataFrame with all the [`Close'] columns for each of the stocks dataframes.
+
+
++*In[14]:*+
+[source, ipython3]
+----
+tech_list = ['AAPL', 'GOOG', 'MSFT', 'AMZN']
+
+start_date = '2020-10-28'
+end_date = '2021-10-28'
+
+ticker = tech_list
+df_closing = yf.download(ticker, start_date, end_date)['Adj Close']
+
+df_closing.head()
+----
+
+
++*Out[14]:*+
+----
+[*********************100%***********************]  4 of 4 completed
+
+[cols=",,,,",options="header",]
+|===
+| |AAPL |AMZN |GOOG |MSFT
+|Date | | | |
+|2020-10-27 |115.854836 |3286.330078 |1604.260010 |211.311005
+|2020-10-28 |110.489349 |3162.780029 |1516.619995 |200.837128
+|2020-10-29 |114.583015 |3211.010010 |1567.239990 |202.858551
+|2020-10-30 |108.164307 |3036.149902 |1621.010010 |200.629028
+|2020-11-02 |108.074875 |3004.479980 |1626.030029 |200.490311
+|===
+----
+
+
++*In[15]:*+
+[source, ipython3]
+----
+#Grabing all the closing prices for the tech stock list into one DataFrame
+
+# df_closing = pd.read_csv (r'Adjust Close of Tech Campany.csv')
+# df_closing = df_closing.set_index('Date')
+
+# df_closing.head()
+----
+
+== Getting the daily return for all the stocks, like we did for the Apple stock.
+
+
++*In[16]:*+
+[source, ipython3]
+----
+# Make a new tech returns DataFrame
+tech_rets = df_closing.pct_change()
+tech_rets.head()
+----
+
+
++*Out[16]:*+
+----
+[cols=",,,,",options="header",]
+|===
+| |AAPL |AMZN |GOOG |MSFT
+|Date | | | |
+|2020-10-27 |NaN |NaN |NaN |NaN
+|2020-10-28 |-0.046312 |-0.037595 |-0.054630 |-0.049566
+|2020-10-29 |0.037050 |0.015249 |0.033377 |0.010065
+|2020-10-30 |-0.056018 |-0.054456 |0.034309 |-0.010991
+|2020-11-02 |-0.000827 |-0.010431 |0.003097 |-0.000691
+|===
+----
+
+== Comparing the daily percentage return of two stocks to check how correlated. First looking a sotck compared to itself.
+
+
++*In[17]:*+
+[source, ipython3]
+----
+# Comparing Google to itself should show a perfectly linear relationship
+sns.jointplot('GOOG','GOOG', tech_rets, kind ='scatter', color = 'red')
+----
+
+
++*Out[17]:*+
+----<seaborn.axisgrid.JointGrid at 0x1fa6d2b13d0>
+![png](output_32_1.png)
+----
+
+
++*In[18]:*+
+[source, ipython3]
+----
+# use joinplot to compare the daily returns of Google and Microsoft
+
+sns.jointplot('GOOG','MSFT', tech_rets, kind ='scatter', color = 'red')
+----
+
+
++*Out[18]:*+
+----<seaborn.axisgrid.JointGrid at 0x1fa6d4ae070>
+![png](output_33_1.png)
+----
+
+== looking if two stocks are perfectly (and positivley) correlated with each other a linear relationship bewteen its daily return values should occur.
+
+== Seaborn and pandas make it very easy to repeat this comparison analysis for every possible combination of stocks in our technology stock ticker list. We can use sns.pairplot() to automatically create this plot
+
+
++*In[19]:*+
+[source, ipython3]
+----
+#simply call pairplot on our DataFrame for an automatic visual analysis of all the comparisons
+sns.pairplot(tech_rets, kind='reg')
+----
+
+
++*Out[19]:*+
+----<seaborn.axisgrid.PairGrid at 0x1fa6ced1670>
+![png](output_35_1.png)
+----
+
+== Above did all the relationships on daily returns between all the stocks. A quick glance shows an interesting correlation between Google and Amazon daily returns. It might be interesting to investigate that individual comaprison. While the simplicity of just calling sns.pairplot() is fantastic we can also use sns.PairGrid() for full control of the figure, including what kind of plots go in the diagonal, the upper triangle, and the lower triangle. Below is an example of utilizing the full power of seaborn to achieve this result
+
+
++*In[20]:*+
+[source, ipython3]
+----
+#Setting up fingure by naming it return_fig, call Pairplot on the DataFrame
+
+return_fig = sns.PairGrid(tech_rets.dropna())
+
+# Using map_upper we can specify what the upper triangle will look like.
+
+return_fig.map_lower(plt.scatter, color='red')
+
+#  We can also define the lower triangle in the figure, inclufing the plot type (kde) or the color map (BluePurple)
+
+return_fig.map_upper(sns.kdeplot, cmap='cool_d')
+
+# Finally we''l define the daignol as a series of histogram plot of daily return
+
+return_fig.map_diag(plt.hist, bins=30)
+----
+
+
++*Out[20]:*+
+----<seaborn.axisgrid.PairGrid at 0x1fa6d5918b0>
+![png](output_37_1.png)
+----
+
+
++*In[21]:*+
+[source, ipython3]
+----
+returns_fig = sns.PairGrid(df_closing)
+
+returns_fig.map_upper(plt.scatter, color = 'red')
+
+returns_fig.map_lower(sns.kdeplot, cmap='cool_d')
+
+returns_fig.map_diag(plt.hist, bins=30)
+----
+
+
++*Out[21]:*+
+----<seaborn.axisgrid.PairGrid at 0x1fa6d00e640>
+![png](output_38_1.png)
+----
+
+== Finally, we could also do a correlation plot, to get actual numerical values for the correlation between the stocks’ daily return values. By comparing the closing prices, we see an interesting relationship between Microsoft and Apple.
+
+
++*In[22]:*+
+[source, ipython3]
+----
+# NOW use seaborn for a quick correlation plot for the daily returns
+
+sns.heatmap(tech_rets.corr(), annot=True, cmap='YlGnBu')
+----
+
+
++*Out[22]:*+
+----<AxesSubplot:>
+![png](output_40_1.png)
+----
+
+
++*In[23]:*+
+[source, ipython3]
+----
+sns.heatmap(df_closing.corr(), annot=True, cmap='summer')
+----
+
+
++*Out[23]:*+
+----<AxesSubplot:>
+![png](output_41_1.png)
+----
+
+== as suspected in our PairPlot, here numerically and visually that Microsoft and Amazon had the strongest correlation of daily stock return. It’s also interesting to see that all the technology comapnies are positively correlated.
+
+== How much value do we put at risk by investing in a particular stock?
+
+== There are many ways to quantify risk, one of the most basic ways using the information we’ve gathered on daily percentage returns is by comparing the expected return with the standard deviation of the daily returns
+
+
++*In[24]:*+
+[source, ipython3]
+----
+# Let's start by defining a new DataFrame as a clenaed version of the orignal tech_rets DataFrame
+
+rets = tech_rets.dropna()
+
+area = np.pi*20
+
+plt.figure(figsize=(10,7))
+plt.scatter(rets.mean(), rets.std(), s=area)
+plt.xlabel('Expected return')
+plt.ylabel('Risk')
+
+for label, x, y in zip(rets.columns, rets.mean(), rets.std()):
+    plt.annotate(label, xy=(x,y), xytext = (100,100), textcoords ='offset points', ha = 'right', va = 'bottom', arrowprops = dict(arrowstyle='-', color ='red', connectionstyle ='arc3, rad=-0'))
+----
+
+
++*Out[24]:*+
+----
+![png](output_45_0.png)
+----
