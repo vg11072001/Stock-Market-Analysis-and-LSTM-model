@@ -7,14 +7,19 @@ Stock information including risk analysis &amp; visualization using explanatory 
 
 ### Dataset
 For Companies - Apple, Google, Microsoft and Amazon
+
 ![image](https://user-images.githubusercontent.com/67424390/180344043-924dfe2c-6f15-4069-a7a9-c3cffacf1838.png)
+
 
 ### Visualizations 
 * Visualization using historical view of the closing price
+
 ![image](https://user-images.githubusercontent.com/67424390/180344385-cb205667-ffbc-4f51-b0c6-efaf20bf0ab9.png)
 
 * Visualization using historical view of the total volume.
+
 ![image](https://user-images.githubusercontent.com/67424390/180344569-1d01f661-2035-4e82-9781-a59c54fdf2f8.png)
+
 
 ### Topics covered in [Notebook](https://github.com/vg11072001/Stock-Market-Analysis-and-LSTM-model/blob/main/smanalysis.ipynb) -
 1.  What was the change in price of the stock overtime?
