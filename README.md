@@ -31,11 +31,15 @@ For Companies - Apple, Google, Microsoft and Amazon
 
 
 ### LSTM Model 
+* [LSTM Notebook](https://github.com/vg11072001/Stock-Market-Analysis-and-LSTM-model/blob/main/lstm_model.ipynb)
+* [Saved Model](https://github.com/vg11072001/Stock-Market-Analysis-and-LSTM-model/blob/main/keras_model.h5)
+
 ![image](https://user-images.githubusercontent.com/67424390/180345867-f3831bd2-6ee6-4b07-9753-82b817f229cc.png)
 
 
 ### Result 
 
 * Prediction of closing price stock price of Google.
+
 ![image](https://user-images.githubusercontent.com/67424390/180346649-86648d26-3809-416d-aefd-a662e03443c2.png)
 
