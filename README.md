@@ -28,3 +28,14 @@ For Companies - Apple, Google, Microsoft and Amazon
 4.  What was the correlation between different stocks closing prices?
 5.  How much value do we put at risk by investing in a particular stock?
 6.  Predicting the closing price stock price of GOOGLE inc
+
+
+### LSTM Model 
+![image](https://user-images.githubusercontent.com/67424390/180345867-f3831bd2-6ee6-4b07-9753-82b817f229cc.png)
+
+
+### Result 
+
+* Prediction of closing price stock price of Google.
+![image](https://user-images.githubusercontent.com/67424390/180346649-86648d26-3809-416d-aefd-a662e03443c2.png)
+
