@@ -44,9 +44,11 @@ For Companies - Apple, Google, Microsoft and Amazon
 
 * Prediction of closing price stock price of Google.
 
+![image](https://user-images.githubusercontent.com/67424390/180346649-86648d26-3809-416d-aefd-a662e03443c2.png)
+
 ### References 
 * [LSTM for Stock Price Prediction](https://towardsdatascience.com/lstm-for-google-stock-price-prediction-e35f5cc84165)
 * [Using a Keras Long Short-Term Memory (LSTM) Model to Predict Stock Prices](https://www.kdnuggets.com/2018/11/keras-long-short-term-memory-lstm-model-predict-stock-prices.html)
 
-![image](https://user-images.githubusercontent.com/67424390/180346649-86648d26-3809-416d-aefd-a662e03443c2.png)
+
 
