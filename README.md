@@ -6,6 +6,7 @@ Stock information including risk analysis &amp; visualization used explanatory d
 
 ### Papers Related this projects - 
 * [Predicting stock market index using LSTM](https://www.sciencedirect.com/science/article/pii/S2666827022000378#:~:text=The%20authors%20concluded%20that%20the,Qiu%20et%20al.)
+    The authors concluded that the LSTM network could effectively extract meaningful information from the financial time series data. Based on prediction accuracy and daily returns after transaction costs, LSTM outperforms random forests, standard deep networks, and logistic regression.
 
 ### Dataset
 For Companies - Apple, Google, Microsoft and Amazon
