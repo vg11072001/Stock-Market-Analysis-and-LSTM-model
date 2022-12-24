@@ -4,6 +4,8 @@ Stock information including risk analysis &amp; visualization used explanatory d
 
 ![image](https://raw.githubusercontent.com/vg11072001/Stock-Market-Analysis-and-LSTM-model/2ed8a9c71d95c5fc960e6eac25954be94f2884f7/55.png)
 
+### Papers Related this projects - 
+* [Predicting stock market index using LSTM](https://www.sciencedirect.com/science/article/pii/S2666827022000378#:~:text=The%20authors%20concluded%20that%20the,Qiu%20et%20al.)
 
 ### Dataset
 For Companies - Apple, Google, Microsoft and Amazon
