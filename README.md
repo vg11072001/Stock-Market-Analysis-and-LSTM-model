@@ -33,7 +33,8 @@ For Companies - Apple, Google, Microsoft and Amazon
 6.  Predicting the closing price stock price of GOOGLE inc
 
 
-### LSTM Model 
+### LSTM Model
+* [Understanding LSTM Networks](http://colah.github.io/posts/2015-08-Understanding-LSTMs/)
 * [LSTM Notebook](https://github.com/vg11072001/Stock-Market-Analysis-and-LSTM-model/blob/main/lstm_model.ipynb)
 * [Saved Model](https://github.com/vg11072001/Stock-Market-Analysis-and-LSTM-model/blob/main/keras_model.h5)
 
